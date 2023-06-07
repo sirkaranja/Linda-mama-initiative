@@ -1,3 +1,4 @@
+import datetime
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
@@ -18,7 +19,7 @@ class Patient(Base):
     address= Column(String)
     appointments = relationship("Appointment", back_populates="patient")
 
-    def __init__(self, id, name, age, contact_info, address, appointments):
+    def __init__(self, name, age, contact_info, address, appointments):
         self.name=name
         self.age=age
         self.contact_info=contact_info
@@ -32,22 +33,36 @@ class Patient(Base):
 class Appointment(Base):
     #appointment table and some of its attribute
     __tablename__ = 'appointments'
-    id = Column(Integer, primary_key= True)
-    appointment_date= Column(Date)
-    appointment_time= Column(Time)
-    status= Column(String)
-    patient_id= Column(Integer, ForeignKey('patients.id'))
-    doctor_id= Column(Integer, ForeignKey('doctors.id'))
-    
-    patient= relationship("Patient", back_populates="appointments")
-    doctor= relationship("Doctor", back_populates="appointments")
+    id = Column(Integer, primary_key=True)
+    appointment_date = Column(Date)
+    appointment_time = Column(Time)
+    status = Column(String)
+    appointment_type = Column(String)  # Add the appointment_type attribute
+    patient_id = Column(Integer, ForeignKey('patients.id'))
+    doctor_id = Column(Integer, ForeignKey('doctors.id'))
 
-    def __init__(self, id, appointment_date, appointment_time, status, patient_id, doctor_id):
-        self.appointment_date=appointment_date
-        self.appointment_time=appointment_time
-        self.status=status
-        self.patient_id= patient_id
-        self.doctor_id=doctor_id
+    patient = relationship("Patient", back_populates="appointments")
+    doctor = relationship("Doctor", back_populates="appointments")
+
+    def __init__(self, appointment_date, appointment_time, status, appointment_type, patient_id, doctor_id):
+        self.appointment_date = appointment_date
+        self.appointment_time = appointment_time
+        self.status = status
+        self.appointment_type = appointment_type  # Assign the appointment_type
+        self.patient_id = patient_id
+        self.doctor_id = doctor_id
+
+# ...
+#users table
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
+    password = Column(String)
+    role = Column(String)  # 'doctor' or 'patient'
+
+    def __repr__(self):
+        return f"<User(username='{self.username}', role='{self.role}')>"
     
 #class patient and its attribute
 class Doctor(Base):
@@ -59,7 +74,7 @@ class Doctor(Base):
      contact_info= Column(String)
      appointments = relationship("Appointment", back_populates="doctor")
 
-     def __init__(self, id, name, specialization, contact_info, appointments):
+     def __init__(self, name, specialization, contact_info, appointments):
          self.name=name
          self.specialization=specialization
          self.contact_info=contact_info
@@ -73,27 +88,65 @@ session = Session()
 Base.metadata.create_all(engine)
 
 
-#generate random data using faker to populate the appointments
+# Generate random data using Faker to populate the appointments
 fake = Faker()
 
-patient1 = Patient(
-    id=1,
-    name=fake.name(),
-    age=str(random.randint(18, 65)),
-    contact_info=fake.phone_number(),
-    address=fake.address(),
-    appointments=[]
-)
+# Create patients
+patients = []
+for _ in range(10):
+    patient = Patient(
+        name=fake.name(),
+        age=str(random.randint(18, 65)),
+        contact_info=fake.phone_number(),
+        address=fake.address(),
+        appointments=[]
+    )
+    patients.append(patient)
 
+# Create doctors
+doctors = []
+for _ in range(5):
+    doctor = Doctor(
+        name=fake.name(),
+        specialization=fake.job(),
+        contact_info=fake.phone_number(),
+        appointments=[]
+    )
+    doctors.append(doctor)
 
-session.add(patient1)
+# Create appointments
+appointment_types = ["antenatal", "delivery", "postnatal"]
+
+appointments = []
+for _ in range(20):
+    appointment = Appointment(
+        appointment_date=fake.date_between(start_date='-30d', end_date='today'),
+        appointment_time=datetime.datetime.now().time(),
+        status=random.choice(['Scheduled', 'Cancelled', 'Completed']),
+        appointment_type=random.choice(appointment_types),
+        patient_id=random.choice(patients).id,
+        doctor_id=random.choice(doctors).id
+    )
+    appointments.append(appointment)
+
+# Add appointments to patients
+for appointment in appointments:
+    patient = next((patient for patient in patients if patient.id == appointment.patient_id), None)
+    if patient:
+        patient.appointments.append(appointment)
+
+# Add appointments to doctors
+for appointment in appointments:
+    doctor = next((doctor for doctor in doctors if doctor.id == appointment.doctor_id), None)
+    if doctor:
+        doctor.appointments.append(appointment)
+
+# Add patients and doctors to the session
+session.add_all(patients)
+session.add_all(doctors)
+
+# Commit the changes to the database
 session.commit()
-
-#generate random data
-# patient1= Patient(1,'Ann doe',25,'07987373','Kibera','postnatal')
-
-# session.add(patient1)
-# session.commit()
 
 
 
