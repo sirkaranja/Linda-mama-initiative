@@ -234,13 +234,7 @@ def book_appointment(patient):
     print("Appointment booked successfully.")
 
     patient_menu(patient)
-
-
-
-
     
-
-
 def view_appointments(patient):
     appointments = session.query(Appointment).filter(Appointment.patient_id == patient.id).all()
     if appointments:
