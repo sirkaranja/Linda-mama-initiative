@@ -175,25 +175,27 @@ def login_as_patient():
     password = getpass("Enter your password:")
 #validation to check if input matches the one in the database
     patient = session.query(User).filter(User.username == username, User.password == password, User.role == "patient").first()
+    #if user exit prints out the login message with their name
     if patient:
         print(f"Logged in as Patient: {patient.username}")
         patient_menu(patient)
     else:
         print("Invalid username or password")
         login_menu()
+#user interface for patient once logged in
 def patient_menu(patient):
     print(f"Welcome, {patient.username}!")
     print("1. View Details")
     print("2. Book Appointment")
     print("3. View Appointments")
     print("4. Logout")
-
+#patients choose option are limited to 3 
     choice = input("Please enter your choice: ")
 
     if choice == "1":
-        view_details(patient)
+        view_details(patient) #views personal details like name
     elif choice == "2":
-        book_appointment(patient)
+        book_appointment(patient) #can book an appointment
     elif choice == "3":
         view_appointments(patient)
     elif choice == "4":
