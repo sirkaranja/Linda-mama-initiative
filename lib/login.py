@@ -87,10 +87,6 @@ def read_patients():
         print(tabulate(patient_data, headers=headers, tablefmt="double_grid"))
     else:
         print("No patients found.")
-    
-
-    
-
 
 # Doctor can view the list of appointments with the help of tabulate
 def read_appointments():
@@ -204,18 +200,12 @@ def patient_menu(patient):
         print("Invalid choice. Please try again")
         patient_menu(patient)
 
-
+#function to view personal details of the patient like id, name
 def view_details(patient):
     print(f"Patient ID: {patient.id}")
     print(f"Username: {patient.username}")
     print(f"Role: {patient.role}")
 
-    
-
-
-
-
-from datetime import time
 
 def book_appointment(patient):
     appointment_type = input("Enter the appointment type (e.g., Postnatal, Prenatal): ")
