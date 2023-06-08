@@ -206,7 +206,7 @@ def view_details(patient):
     print(f"Username: {patient.username}")
     print(f"Role: {patient.role}")
 
-
+#fucntion for patient to book an appointment
 def book_appointment(patient):
     appointment_type = input("Enter the appointment type (e.g., Postnatal, Prenatal): ")
     appointment_date = input("Enter the appointment date (YYYY-MM-DD): ")
@@ -220,7 +220,7 @@ def book_appointment(patient):
 
     # Get the doctor ID
     doctor_id = input("Enter the doctor ID for the appointment: ")
-
+#creates and instance from the user input and store them in the database by mapping them to respective attributes
     appointment = Appointment(
         appointment_type=appointment_type,
         appointment_date=appointment_date,
