@@ -146,17 +146,17 @@ def get_report():
         appointment_data = []
         for appointment in scheduled_appointments:
             appointment_data.append([appointment.id, appointment.appointment_type, appointment.appointment_date, appointment.appointment_time, appointment.status])
-
+#initialized headers and use tabulate to present the output nicely
         headers = ["Appointment ID", "Type", "Date", "Time", "Status"]
         print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
     else:
         print("No appointments found.")
 
-   #update appointment based on status
+   #update appointment based on status either scheduled or cancelled
 def update_appointment_status():
     appointment_id = input("Enter the appointment ID to update: ")
     new_status = input("Enter the new status (Scheduled/Cancelled): ")
-
+#checks for appointments that hace schedule or cancelled as their status
     appointment = session.query(Appointment).filter(Appointment.id == appointment_id).first()
     if appointment:
         if new_status == "Scheduled" or new_status == "Cancelled":
@@ -168,9 +168,6 @@ def update_appointment_status():
     else:
         print("Appointment not found.")
    
-
-
-
 def login_as_patient():
     username = input("Enter your username:")
     password = getpass("Enter your password:")
