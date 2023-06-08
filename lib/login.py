@@ -53,7 +53,7 @@ def doctor_menu(doctor):
     print("5. Get Report")
     print("6. Update Appointment Status")
     print("7. Logout")
-
+#after logging as doctor there are several options made avaibale to them
     choice = input("Please enter your choice:")
 
     if choice == "1":
@@ -96,36 +96,33 @@ def read_patients():
 def read_appointments():
     appointments = session.query(Appointment).all()
     if appointments:
-        appointment_data = []
+        appointment_data = [] #initialized an empty list to append details from the db
         for appointment in appointments:
             appointment_data.append([appointment.id, appointment.appointment_date, appointment.appointment_time, appointment.status])
-
+#initialized headers and use tabulate to present the output nicely
         headers = ["Appointment ID", "Date", "Time", "Status"]
         print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
     else:
         print("No appointments found.")
 
 
-
+#function to add doctors via the command line.
 def add_patient():
+    #request for user inputs
     name = input("Enter patient's name: ")
     age = input("Enter patient's age: ")
     contact_info = input("Enter patient's contact information: ")
     address = input("Enter patient's address: ")
-
+#create an instance from user inputs and store them in database
     patient = Patient(name=name, age=age, contact_info=contact_info, address=address, appointments=None)
     session.add(patient)
     session.commit()
     print("Patient added successfully.")
     
-
- 
-  
-
-
+#function to delete patient record by id
 def delete_patient():
     patient_id = input("Enter the patient ID to delete: ")
-
+#first() finds the id and stops from there
     patient = session.query(Patient).filter(Patient.id == patient_id).first()
     if patient:
         session.delete(patient)
@@ -137,10 +134,12 @@ def delete_patient():
    
 #generate report based on the status of the appointment that are scheduled.
 def get_report():
+#get all appointments that status is schedulled.
     scheduled_appointments = session.query(Appointment).filter(Appointment.status == "Scheduled").all()
     num_appointments = len(scheduled_appointments)
 
     print("Appointment Report")
+    #shows the number of entries with status scheduled
     print(f"Total number of appointments with status 'Scheduled': {num_appointments}")
 
     if scheduled_appointments:
