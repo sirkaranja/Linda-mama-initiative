@@ -234,14 +234,17 @@ def book_appointment(patient):
     print("Appointment booked successfully.")
 
     patient_menu(patient)
-    
+
+ #function to view the already booked appointment   
 def view_appointments(patient):
+#filters for the appointments details based with the patient id
     appointments = session.query(Appointment).filter(Appointment.patient_id == patient.id).all()
     if appointments:
+        #empty list to append details
         appointment_data = []
         for appointment in appointments:
             appointment_data.append([appointment.id, appointment.appointment_type, appointment.appointment_date, appointment.appointment_time, appointment.status])
-
+#initialized headers and use tabulate to present the output nicely
         headers = ["Appointment ID", "Type", "Date", "Time", "Status"]
         print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
     else:
