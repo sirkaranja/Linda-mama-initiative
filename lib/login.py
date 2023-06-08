@@ -17,23 +17,24 @@ def login_menu():
     print("1. Login as Doctor")
     print("2. Login as Patient")
     print("3. Exit")
-
+#selection to either login as a doctor or patient
     choice = input("Please enter your choice:")
 
     if choice == "1":
         login_as_doctor()
     elif choice == "2":
         login_as_patient()
+#option 3 is to exit the program        
     elif choice == "3":
         print("Goodbye!")
     else:
         print("Invalid choice. Please try again")
 
-
+#enter details to log in as doctor
 def login_as_doctor():
     username = input("Enter your username:")
     password = getpass("Enter your password:")
-
+#validates the inputs from user and compares with the one stored in database
     doctor = session.query(User).filter(User.username == username, User.password == password, User.role == "doctor").first()
     if doctor:
         print(f"Logged in as Doctor: {doctor.username}")
