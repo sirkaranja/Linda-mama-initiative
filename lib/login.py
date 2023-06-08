@@ -127,13 +127,23 @@ def delete_patient():
         print("Patient not found.")
 
    
-
+#generate report based on the status of the appointment that are scheduled.
 def get_report():
-    postnatal_appointments = session.query(Appointment).filter(Appointment.appointment_type == "Postnatal", Appointment.status == "Scheduled").all()
-    num_patients = len(postnatal_appointments)
+    scheduled_appointments = session.query(Appointment).filter(Appointment.status == "Scheduled").all()
+    num_appointments = len(scheduled_appointments)
 
-    print("Postnatal Appointment Report")
-    print(f"Total number of patients with scheduled postnatal appointments: {num_patients}")
+    print("Appointment Report")
+    print(f"Total number of appointments with status 'Scheduled': {num_appointments}")
+
+    if scheduled_appointments:
+        appointment_data = []
+        for appointment in scheduled_appointments:
+            appointment_data.append([appointment.id, appointment.appointment_type, appointment.appointment_date, appointment.appointment_time, appointment.status])
+
+        headers = ["Appointment ID", "Type", "Date", "Time", "Status"]
+        print(tabulate(appointment_data, headers=headers, tablefmt="grid"))
+    else:
+        print("No appointments found.")
 
    
 
