@@ -252,7 +252,6 @@ def view_appointments(patient):
 
     patient_menu(patient)
 
-
 login_menu()
 
 
