@@ -167,11 +167,13 @@ def update_appointment_status():
             print("Invalid status. Please enter 'Completed' or 'Cancelled'.")
     else:
         print("Appointment not found.")
-   
+
+ #function  to log in as patient
 def login_as_patient():
+    #request for user inputs
     username = input("Enter your username:")
     password = getpass("Enter your password:")
-
+#validation to check if input matches the one in the database
     patient = session.query(User).filter(User.username == username, User.password == password, User.role == "patient").first()
     if patient:
         print(f"Logged in as Patient: {patient.username}")
@@ -179,8 +181,6 @@ def login_as_patient():
     else:
         print("Invalid username or password")
         login_menu()
-
-
 def patient_menu(patient):
     print(f"Welcome, {patient.username}!")
     print("1. View Details")
