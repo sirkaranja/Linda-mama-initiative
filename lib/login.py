@@ -40,7 +40,7 @@ def login_as_doctor():
         doctor_menu(doctor)
     else:
         print("Invalid username or password")
-        login_menu()
+        
 
 #after logging in as a doctor
 def doctor_menu(doctor):
@@ -86,6 +86,7 @@ def read_patients():
         print(tabulate(patient_data, headers=headers, tablefmt="double_grid"))
     else:
         print("No patients found.")
+    
 
     
 
@@ -115,6 +116,7 @@ def add_patient():
     session.add(patient)
     session.commit()
     print("Patient added successfully.")
+    
 
  
   
