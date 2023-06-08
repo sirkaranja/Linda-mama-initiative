@@ -24,7 +24,7 @@ class Patient(Base):
         self.age=age
         self.contact_info=contact_info
         self.address=address
-        self.appointments=appointments
+       
 
     def __rep__(self):
         return f"{self.name}"
@@ -78,7 +78,7 @@ class Doctor(Base):
          self.name=name
          self.specialization=specialization
          self.contact_info=contact_info
-         self.appointments=appointments
+        
 
 # Connect to the database
 engine = sqlalchemy.create_engine('sqlite:///linda_mama_care.db')
