@@ -92,87 +92,87 @@ Base.metadata.create_all(engine)
 fake = Faker()
  #after I geenrated the required data stopped the faker
 # Create patients
-# patients = []
-# for _ in range(10):
-#     patient = Patient(
-#         name=fake.name(),
-#         age=str(random.randint(18, 30)),
-#         contact_info=fake.phone_number(),
-#         address=fake.address(),
-#         appointments=[]
-#     )
-#     patients.append(patient)
+patients = []
+for _ in range(10):
+    patient = Patient(
+        name=fake.name(),
+        age=str(random.randint(18, 30)),
+        contact_info=fake.phone_number(),
+        address=fake.address(),
+        appointments=[]
+    )
+    patients.append(patient)
 
-# # Create doctors
-# doctors = []
-# for _ in range(5):
-#     doctor = Doctor(
-#         name=fake.name(),
-#         specialization=fake.job(),
-#         contact_info=fake.phone_number(),
-#         appointments=[]
-#     )
-#     doctors.append(doctor)
+# Create doctors
+doctors = []
+for _ in range(5):
+    doctor = Doctor(
+        name=fake.name(),
+        specialization=fake.job(),
+        contact_info=fake.phone_number(),
+        appointments=[]
+    )
+    doctors.append(doctor)
 
-# # Create appointments
-# appointment_types = ["antenatal", "delivery", "postnatal"]
+# Create appointments
+appointment_types = ["antenatal", "delivery", "postnatal"]
 
-# appointments = []
-# for _ in range(20):
-#     appointment = Appointment(
-#         appointment_date=fake.date_between(start_date='-30d', end_date='today'),
-#         appointment_time=datetime.datetime.now().time(),
-#         status=random.choice(['Scheduled', 'Cancelled', 'Completed']),
-#         appointment_type=random.choice(appointment_types),
-#         patient_id=random.choice(patients).id,
-#         doctor_id=random.choice(doctors).id
-#     )
-#     appointments.append(appointment)
+appointments = []
+for _ in range(20):
+    appointment = Appointment(
+        appointment_date=fake.date_between(start_date='-30d', end_date='today'),
+        appointment_time=datetime.datetime.now().time(),
+        status=random.choice(['Scheduled', 'Cancelled', 'Completed']),
+        appointment_type=random.choice(appointment_types),
+        patient_id=random.choice(patients).id,
+        doctor_id=random.choice(doctors).id
+    )
+    appointments.append(appointment)
 
-# # Add appointments to patients
-# for appointment in appointments:
-#     patient = next((patient for patient in patients if patient.id == appointment.patient_id), None)
-#     if patient:
-#         patient.appointments.append(appointment)
+# Add appointments to patients
+for appointment in appointments:
+    patient = next((patient for patient in patients if patient.id == appointment.patient_id), None)
+    if patient:
+        patient.appointments.append(appointment)
 
-# # Add appointments to doctors
-# for appointment in appointments:
-#     doctor = next((doctor for doctor in doctors if doctor.id == appointment.doctor_id), None)
-#     if doctor:
-#         doctor.appointments.append(appointment)
+# Add appointments to doctors
+for appointment in appointments:
+    doctor = next((doctor for doctor in doctors if doctor.id == appointment.doctor_id), None)
+    if doctor:
+        doctor.appointments.append(appointment)
 
-# # Add patients and doctors to the session
-# session.add_all(patients)
-# session.add_all(doctors)
+# Add patients and doctors to the session
+session.add_all(patients)
+session.add_all(doctors)
 
-# # Generate dummy data for doctors
-# doctors = []
-# for _ in range(2):
-#     doctor = User(
-#         username=fake.user_name(),
-#         password=fake.password(),
-#         role="doctor"
-#     )
-#     doctors.append(doctor)
+# Generate dummy data for doctors
+doctors = []
+for _ in range(2):
+    doctor = User(
+        username=fake.user_name(),
+        password=fake.password(),
+        role="doctor"
+    )
+    doctors.append(doctor)
 
-# # Generate dummy data for patients
+# Generate dummy data for patients
 
 
-# patients = []
-# for _ in range(5):
-#     patient = User(
-#         username=fake.user_name(),
-#         password=fake.password(),
-#         role="patient"
-#     )
-#     patients.append(patient)
+patients = []
+for _ in range(5):
+    patient = User(
+        username=fake.user_name(),
+        password=fake.password(),
+        role="patient"
+    )
+    patients.append(patient)
 
-# # Add doctors and patients to the session
-# session.add_all(doctors)
-# session.add_all(patients)
+# Add doctors and patients to the session
+session.add_all(doctors)
+session.add_all(patients)
 
-# # Commit the changes to the database
-# session.commit()
+# Commit the changes to the database
+session.commit()
 
 
 

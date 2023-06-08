@@ -200,11 +200,15 @@ def patient_menu(patient):
         print("Invalid choice. Please try again")
         patient_menu(patient)
 
-#function to view personal details of the patient like id, name
+#function to view personal details of the patient like id, name ( using dictionary)
 def view_details(patient):
-    print(f"Patient ID: {patient.id}")
-    print(f"Username: {patient.username}")
-    print(f"Role: {patient.role}")
+    patient_details = {
+        "Patient ID": patient.id,
+        "Username": patient.username,
+        "Role": patient.role
+    }
+    print(patient_details)
+
 
 #fucntion for patient to book an appointment
 def book_appointment(patient):
@@ -214,6 +218,7 @@ def book_appointment(patient):
 
     # Convert appointment_date to a Python date object
     appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+   
 
     # Convert appointment_time to a Python time object
     appointment_time = datetime.strptime(appointment_time, "%I:%M %p").time()
