@@ -81,8 +81,7 @@ def read_patients():
     else:
         print("No patients found.")
 
-    doctor_menu()
-
+    
 
 
 # Doctor can view the list of appointments with the help of tabulate
@@ -98,26 +97,44 @@ def read_appointments():
     else:
         print("No appointments found.")
 
-    doctor_menu()
+
 
 def add_patient():
-    # Code to add a new patient
+    name = input("Enter patient's name: ")
+    age = input("Enter patient's age: ")
+    contact_info = input("Enter patient's contact information: ")
+    address = input("Enter patient's address: ")
 
-    pass
+    patient = Patient(name=name, age=age, contact_info=contact_info, address=address, appointments=None)
+    session.add(patient)
+    session.commit()
+    print("Patient added successfully.")
+
+ 
+  
 
 
 def delete_patient():
-    # Code to delete a patient
-    pass
+    patient_id = input("Enter the patient ID to delete: ")
 
+    patient = session.query(Patient).filter(Patient.id == patient_id).first()
+    if patient:
+        session.delete(patient)
+        session.commit()
+        print("Patient deleted successfully.")
+    else:
+        print("Patient not found.")
+
+   
 
 def get_report():
-    # Code to generate a report
-    pass
+    postnatal_appointments = session.query(Appointment).filter(Appointment.appointment_type == "Postnatal", Appointment.status == "Scheduled").all()
+    num_patients = len(postnatal_appointments)
 
+    print("Postnatal Appointment Report")
+    print(f"Total number of patients with scheduled postnatal appointments: {num_patients}")
 
-
-
+   
 
 
 
@@ -127,9 +144,14 @@ def login_as_patient():
 
     patient = session.query(User).filter(User.username == username, User.password == password, User.role == "patient").first()
     if patient:
-        print(f"Logged in as Patient: {patient}")
+        print(f"Logged in as Patient: {patient.username}")
     else:
         print("Invalid username or password")
-        login_menu()
+       
+
+
+    
+
+
 
 login_menu()
