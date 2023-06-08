@@ -197,9 +197,9 @@ def patient_menu(patient):
     elif choice == "2":
         book_appointment(patient) #can book an appointment
     elif choice == "3":
-        view_appointments(patient)
+        view_appointments(patient) #views the appointment booked 
     elif choice == "4":
-        print("Logging out. Goodbye!")
+        print("Logging out. Goodbye!") #exit the program
     else:
         print("Invalid choice. Please try again")
         patient_menu(patient)
