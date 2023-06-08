@@ -1,9 +1,10 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from getpass import getpass
-from main import Appointment, Patient, User
+from main import Appointment, Doctor, Patient, User
 from tabulate import tabulate
 from datetime import datetime
+from datetime import time
 
 # Connect to the database
 engine = create_engine('sqlite:///linda_mama_care.db')
@@ -49,10 +50,11 @@ def doctor_menu(doctor):
     print("3. Add a Patient")
     print("4. Delete a Patient")
     print("5. Get Report")
-    print("6. Logout")
+    print("6. Update Appointment Status")
+    print("7. Logout")
 
     choice = input("Please enter your choice:")
-  #displaying the patients details
+
     if choice == "1":
         read_patients()
     elif choice == "2":
@@ -64,10 +66,13 @@ def doctor_menu(doctor):
     elif choice == "5":
         get_report()
     elif choice == "6":
+        update_appointment_status()
+    elif choice == "7":
         print("Logging out. Goodbye!")
     else:
         print("Invalid choice. Please try again")
         doctor_menu(doctor)
+
 
 #doctor will be able to view the list of patients with the help of tabulate
 def read_patients():
@@ -78,7 +83,7 @@ def read_patients():
             patient_data.append([patient.id, patient.name, patient.age, patient.contact_info, patient.address])
 
         headers = ["Patient ID", "Name", "Age", "Contact Info", "Address"]
-        print(tabulate(patient_data, headers=headers, tablefmt="fancy_grid"))
+        print(tabulate(patient_data, headers=headers, tablefmt="double_grid"))
     else:
         print("No patients found.")
 
@@ -94,7 +99,7 @@ def read_appointments():
             appointment_data.append([appointment.id, appointment.appointment_date, appointment.appointment_time, appointment.status])
 
         headers = ["Appointment ID", "Date", "Time", "Status"]
-        print(tabulate(appointment_data, headers=headers, tablefmt="grid"))
+        print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
     else:
         print("No appointments found.")
 
@@ -141,11 +146,28 @@ def get_report():
             appointment_data.append([appointment.id, appointment.appointment_type, appointment.appointment_date, appointment.appointment_time, appointment.status])
 
         headers = ["Appointment ID", "Type", "Date", "Time", "Status"]
-        print(tabulate(appointment_data, headers=headers, tablefmt="grid"))
+        print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
     else:
         print("No appointments found.")
 
+   #update appointment based on status
+def update_appointment_status():
+    appointment_id = input("Enter the appointment ID to update: ")
+    new_status = input("Enter the new status (Scheduled/Cancelled): ")
+
+    appointment = session.query(Appointment).filter(Appointment.id == appointment_id).first()
+    if appointment:
+        if new_status == "Scheduled" or new_status == "Cancelled":
+            appointment.status = new_status
+            session.commit()
+            print("Appointment status updated successfully.")
+        else:
+            print("Invalid status. Please enter 'Completed' or 'Cancelled'.")
+    else:
+        print("Appointment not found.")
    
+
+
 
 def login_as_patient():
     username = input("Enter your username:")
@@ -192,6 +214,8 @@ def view_details(patient):
 
 
 
+from datetime import time
+
 def book_appointment(patient):
     appointment_type = input("Enter the appointment type (e.g., Postnatal, Prenatal): ")
     appointment_date = input("Enter the appointment date (YYYY-MM-DD): ")
@@ -200,12 +224,18 @@ def book_appointment(patient):
     # Convert appointment_date to a Python date object
     appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
 
+    # Convert appointment_time to a Python time object
+    appointment_time = datetime.strptime(appointment_time, "%I:%M %p").time()
+
+    # Get the doctor ID
+    doctor_id = input("Enter the doctor ID for the appointment: ")
+
     appointment = Appointment(
         appointment_type=appointment_type,
         appointment_date=appointment_date,
         appointment_time=appointment_time,
         patient_id=patient.id,
-        doctor_id=None,  # Replace None with the appropriate doctor ID
+        doctor_id=doctor_id,
         status="Scheduled"
     )
     session.add(appointment)
@@ -213,6 +243,7 @@ def book_appointment(patient):
     print("Appointment booked successfully.")
 
     patient_menu(patient)
+
 
 
 
@@ -227,7 +258,7 @@ def view_appointments(patient):
             appointment_data.append([appointment.id, appointment.appointment_type, appointment.appointment_date, appointment.appointment_time, appointment.status])
 
         headers = ["Appointment ID", "Type", "Date", "Time", "Status"]
-        print(tabulate(appointment_data, headers=headers, tablefmt="grid"))
+        print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
     else:
         print("No appointments found.")
 
