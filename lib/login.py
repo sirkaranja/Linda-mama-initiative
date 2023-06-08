@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from getpass import getpass
 from main import Appointment, Patient, User
 from tabulate import tabulate
+from datetime import datetime
 
 # Connect to the database
 engine = create_engine('sqlite:///linda_mama_care.db')
@@ -136,8 +137,6 @@ def get_report():
 
    
 
-
-
 def login_as_patient():
     username = input("Enter your username:")
     password = getpass("Enter your password:")
@@ -145,13 +144,92 @@ def login_as_patient():
     patient = session.query(User).filter(User.username == username, User.password == password, User.role == "patient").first()
     if patient:
         print(f"Logged in as Patient: {patient.username}")
+        patient_menu(patient)
     else:
         print("Invalid username or password")
-       
+        login_menu()
+
+
+def patient_menu(patient):
+    print(f"Welcome, {patient.username}!")
+    print("1. View Details")
+    print("2. Book Appointment")
+    print("3. View Appointments")
+    print("4. Logout")
+
+    choice = input("Please enter your choice: ")
+
+    if choice == "1":
+        view_details(patient)
+    elif choice == "2":
+        book_appointment(patient)
+    elif choice == "3":
+        view_appointments(patient)
+    elif choice == "4":
+        print("Logging out. Goodbye!")
+    else:
+        print("Invalid choice. Please try again")
+        patient_menu(patient)
+
+
+def view_details(patient):
+    print(f"Patient ID: {patient.id}")
+    print(f"Username: {patient.username}")
+    print(f"Role: {patient.role}")
+
+    
+
+
+
+
+def book_appointment(patient):
+    appointment_type = input("Enter the appointment type (e.g., Postnatal, Prenatal): ")
+    appointment_date = input("Enter the appointment date (YYYY-MM-DD): ")
+    appointment_time = input("Enter the appointment time (HH:MM AM/PM): ")
+
+    # Convert appointment_date to a Python date object
+    appointment_date = datetime.strptime(appointment_date, "%Y-%m-%d").date()
+
+    appointment = Appointment(
+        appointment_type=appointment_type,
+        appointment_date=appointment_date,
+        appointment_time=appointment_time,
+        patient_id=patient.id,
+        doctor_id=None,  # Replace None with the appropriate doctor ID
+        status="Scheduled"
+    )
+    session.add(appointment)
+    session.commit()
+    print("Appointment booked successfully.")
+
+    patient_menu(patient)
+
+
+
+    
+
+
+def view_appointments(patient):
+    appointments = session.query(Appointment).filter(Appointment.patient_id == patient.id).all()
+    if appointments:
+        appointment_data = []
+        for appointment in appointments:
+            appointment_data.append([appointment.id, appointment.appointment_type, appointment.appointment_date, appointment.appointment_time, appointment.status])
+
+        headers = ["Appointment ID", "Type", "Date", "Time", "Status"]
+        print(tabulate(appointment_data, headers=headers, tablefmt="grid"))
+    else:
+        print("No appointments found.")
+
+    patient_menu(patient)
+
+
+login_menu()
+
+
 
 
     
 
 
 
-login_menu()
