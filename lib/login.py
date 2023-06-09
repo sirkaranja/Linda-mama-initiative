@@ -84,9 +84,11 @@ def read_patients():
             patient_data.append([patient.id, patient.name, patient.age, patient.contact_info, patient.address])
 
         headers = ["Patient ID", "Name", "Age", "Contact Info", "Address"]
-        print(tabulate(patient_data, headers=headers, tablefmt="double_grid"))
+        print(tabulate(patient_data, headers=headers, tablefmt="grid"))
     else:
         print("No patients found.")
+
+
 
 # Doctor can view the list of appointments with the help of tabulate
 def read_appointments():
@@ -97,9 +99,10 @@ def read_appointments():
             appointment_data.append([appointment.id, appointment.appointment_date, appointment.appointment_time, appointment.status])
 #initialized headers and use tabulate to present the output nicely
         headers = ["Appointment ID", "Date", "Time", "Status"]
-        print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
+        print(tabulate(appointment_data, headers=headers, tablefmt="grid"))
     else:
         print("No appointments found.")
+
 
 
 #function to add doctors via the command line.
@@ -144,7 +147,7 @@ def get_report():
             appointment_data.append([appointment.id, appointment.appointment_type, appointment.appointment_date, appointment.appointment_time, appointment.status])
 #initialized headers and use tabulate to present the output nicely
         headers = ["Appointment ID", "Type", "Date", "Time", "Status"]
-        print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
+        print(tabulate(appointment_data, headers=headers, tablefmt="grid"))
     else:
         print("No appointments found.")
 
@@ -251,7 +254,7 @@ def view_appointments(patient):
             appointment_data.append([appointment.id, appointment.appointment_type, appointment.appointment_date, appointment.appointment_time, appointment.status])
 #initialized headers and use tabulate to present the output nicely
         headers = ["Appointment ID", "Type", "Date", "Time", "Status"]
-        print(tabulate(appointment_data, headers=headers, tablefmt="double_grid"))
+        print(tabulate(appointment_data, headers=headers, tablefmt="outline"))
     else:
         print("No appointments found.")
 
